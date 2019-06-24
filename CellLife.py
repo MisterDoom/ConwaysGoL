@@ -18,7 +18,7 @@ class CellLife:
 
         self.grid = np.array([])
         if genRandom == 1:
-            self.grid = self.randomGrid(0.2)
+            self.grid = CellLife.randomGrid(0.2)
         else:
             self.grid = np.zeros(
                 self.gridSize *
@@ -27,7 +27,7 @@ class CellLife:
     def startSimulation(self):
         self.fig, self.ax = plt.subplots()
         self.img = self.ax.imshow(self.grid, interpolation='nearest')
-        self.ani = animation.FuncAnimation(self.fig, self.update,
+        self.ani = animation.FuncAnimation(self.fig, CellLife.update,
                                            fargs=(self.img, self.grid,
                                                   self.gridSize, ),
                                            frames=10,
@@ -48,10 +48,11 @@ class CellLife:
         self.grid[i:i + 3, j:j + 3] = glider
 
     def addGosperGun(self, i, j):
-        gosperGun, size = self.addPattern("GosperGun.txt")
+        gosperGun, size = CellLife.addPattern("GosperGun.txt")
         self.grid[i:i + size, j:j + size] = gosperGun
 
-    def addPattern(self, inputFile):
+    @staticmethod
+    def addPattern(inputFile):
         code = open(inputFile, "r").readlines()
         size = int(code[0].strip())
         pattern = np.zeros((size, size))
@@ -63,7 +64,8 @@ class CellLife:
 
         return pattern, size
 
-    def update(self, frames, img, grid, gridSize):
+    @staticmethod
+    def update(frames, img, grid, gridSize):
         newGrid = grid.copy()
         for i in range(gridSize):
             for j in range(gridSize):
@@ -88,10 +90,11 @@ class CellLife:
         grid[:] = newGrid[:]
         return img,
 
-    def randomGrid(self, aliveCellProb):
+    @staticmethod
+    def randomGrid(aliveCellProb, gridSize):
         if aliveCellProb < 0 or aliveCellProb > 1:
             aliveCellProb = 0.2
 
-        return np.random.choice([0, 255], self.gridSize * self.gridSize,
-                                p=[1 - aliveCellProb, aliveCellProb]).reshape(self.gridSize,
-                                                                              self.gridSize)
+        return np.random.choice([0, 255], gridSize * gridSize,
+                                p=[1 - aliveCellProb, aliveCellProb]).reshape(gridSize,
+                                                                              gridSize)
