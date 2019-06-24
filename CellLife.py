@@ -4,7 +4,7 @@ import matplotlib.animation as animation
 
 
 class CellLife:
-    def __init__(self, gridSize=None, updateInterval=None, genRandom=None):
+    def __init__(self, gridSize=None, updateInterval=None, genRandom=None, savingFile=None):
         # set grid size
         if gridSize == None:
             self.gridSize = 100
@@ -18,11 +18,13 @@ class CellLife:
 
         self.grid = np.array([])
         if genRandom == 1:
-            self.grid = CellLife.randomGrid(0.2)
+            self.grid = CellLife.randomGrid(0.2, self.gridSize)
         else:
             self.grid = np.zeros(
                 self.gridSize *
                 self.gridSize).reshape(self.gridSize, self.gridSize)
+
+        self.savingFile = savingFile
 
     def startSimulation(self):
         self.fig, self.ax = plt.subplots()
